@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  server:
+    build: .
+    command: python server_with_save.py --server-address 0.0.0.0:$PORT
+    environment:
+      - PORT=8080
+      - MODEL_SAVE_PATH=/app/models
+    ports:
+      - "8080:8080"
+  
+  client0:
+    build: .
+    command: python client.py --client-id 0 --server-address server:8080 --cloud-mode
+    depends_on:
+      - server
+  
+  client1:
+    build: .
+    command: python client.py --client-id 1 --server-address server:8080 --cloud-mode
+    depends_on:
+      - server
