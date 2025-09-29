@@ -1,0 +1,10 @@
+{
+  "deploy": {
+    "startCommand": "python client.py --client-id 1 --server-address $SERVER_URL --cloud-mode",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 5
+  },
+  "environment": {
+    "SERVER_URL": "federated-server-production.up.railway.app:8080"
+  }
+}

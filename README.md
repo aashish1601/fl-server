@@ -8,27 +8,62 @@ This project implements federated learning using Flower and PyTorch, deployed on
 - **Clients**: Train on local data and send updates to server
 - **Models**: Saved after each round and final model
 
-## 🚀 Deployment
+## 🚀 Multi-Service Deployment
 
 ### Prerequisites
 - Railway account
 - Docker (for local testing)
 
-### Deploy to Railway
+### Option 1: Railway Dashboard (Recommended)
 
-1. **Fork this repository**
-2. **Connect to Railway**
-3. **Deploy automatically**
+1. **Go to [railway.app](https://railway.app)**
+2. **Create New Project** → **Deploy from GitHub**
+3. **Deploy 3 Services**:
+
+#### 🏠 Server Service
+- **Name**: `federated-server`
+- **Command**: `python server_with_save.py --server-address 0.0.0.0:$PORT --num-rounds 3`
+- **Environment**:
+  - `PORT=8080`
+  - `MODEL_SAVE_PATH=/app/models`
+
+#### 👥 Client 0 Service
+- **Name**: `federated-client-0`
+- **Command**: `python client.py --client-id 0 --server-address $SERVER_URL --cloud-mode`
+- **Environment**:
+  - `SERVER_URL=<server-url>:8080`
+
+#### 👥 Client 1 Service
+- **Name**: `federated-client-1`
+- **Command**: `python client.py --client-id 1 --server-address $SERVER_URL --cloud-mode`
+- **Environment**:
+  - `SERVER_URL=<server-url>:8080`
+
+### Option 2: Railway CLI
+
+```bash
+# 1. Install Railway CLI
+npm install -g @railway/cli
+
+# 2. Login to Railway
+railway login
+
+# 3. Deploy all services
+chmod +x deploy-cli.sh
+./deploy-cli.sh
+```
 
 ### Environment Variables
 
-Set these in Railway dashboard:
-
+**Server Service:**
 ```
 PORT=8080
 MODEL_SAVE_PATH=/app/models
-NUM_ROUNDS=5
-SERVER_ADDRESS=your-server.railway.app:8080
+```
+
+**Client Services:**
+```
+SERVER_URL=your-server.railway.app:8080
 ```
 
 ## 🔧 Local Development
@@ -70,18 +105,24 @@ python client.py --client-id 1 --server-address 127.0.0.1:8080
 ## 📁 File Structure
 
 ```
-├── Dockerfile              # Docker configuration
-├── requirements.txt        # Python dependencies
-├── .dockerignore          # Docker ignore file
-├── railway.json           # Railway configuration
-├── railway.toml           # Railway TOML config
-├── railway-compose.yml    # Railway compose file
-├── start.sh               # Startup script
-├── README.md              # This file
-├── server_with_save.py    # Server implementation
-├── client.py              # Client implementation
-├── model.py               # Neural network model
-└── models/                # Saved models directory
+├── Dockerfile                    # Docker configuration
+├── requirements.txt              # Python dependencies
+├── .dockerignore                 # Docker ignore file
+├── railway.json                  # Railway configuration
+├── railway-server.json           # Server service config
+├── railway-client0.json          # Client 0 service config
+├── railway-client1.json          # Client 1 service config
+├── railway-compose.yml           # Railway compose file
+├── deploy-cli.sh                 # CLI deployment script
+├── deploy-multi-service.sh       # Multi-service deployment
+├── deploy-dashboard.md           # Dashboard deployment guide
+├── run_federated.py              # Single-process runner
+├── start.sh                      # Startup script
+├── README.md                     # This file
+├── server_with_save.py           # Server implementation
+├── client.py                     # Client implementation
+├── model.py                      # Neural network model
+└── models/                       # Saved models directory
 ```
 
 ## 🎉 Benefits

@@ -128,8 +128,9 @@ def main():
     
     # Get server address from environment if in cloud mode
     if args.cloud_mode or os.getenv('RAILWAY_ENVIRONMENT'):
-        server_address = os.getenv('SERVER_ADDRESS', args.server_address)
+        server_address = os.getenv('SERVER_URL', os.getenv('SERVER_ADDRESS', args.server_address))
         print(f"☁️ Running in cloud mode")
+        print(f"🌐 Server URL from environment: {server_address}")
     else:
         server_address = args.server_address
     
