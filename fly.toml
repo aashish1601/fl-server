@@ -1,0 +1,33 @@
+app = "fl-mnist-server"
+primary_region = "lhr"  # Change to your preferred region
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  FL_CONFIG = "configs/mnist_config.py"
+  NUM_ROUNDS = "5"
+  ALPHA = "0.5"
+  MIN_CLIENTS = "2"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = false
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+
+  [[services.ports]]
+    port = 8080
+    handlers = []
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+

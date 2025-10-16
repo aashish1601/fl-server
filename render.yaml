@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: fl-mnist-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    env: docker
+    envVars:
+      - key: FL_CONFIG
+        value: configs/mnist_config.py
+      - key: NUM_ROUNDS
+        value: 5
+      - key: ALPHA
+        value: 0.5
+      - key: MIN_CLIENTS
+        value: 2
+      - key: PORT
+        value: 8080
+
