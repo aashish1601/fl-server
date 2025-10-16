@@ -1,9 +1,8 @@
 [build]
-builder = "dockerfile"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "python server_with_save.py --server-address 0.0.0.0:$PORT"
-healthcheckPath = "/"
-healthcheckTimeout = 100
+startCommand = "python server_generic.py --config ${FL_CONFIG:-configs/mnist_config.py} --server-address 0.0.0.0:${PORT:-8080} --num-rounds ${NUM_ROUNDS:-5} --alpha ${ALPHA:-0.5} --min-clients ${MIN_CLIENTS:-2}"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
